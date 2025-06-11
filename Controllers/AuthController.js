@@ -39,7 +39,7 @@ const profile = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body; // ✅ add 'name'
   try {
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -51,15 +51,17 @@ const register = async (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     // Create new user
-    const user = await User.create({ email, password: hashedPassword });
+    const user = await User.create({ name, email, password: hashedPassword }); // ✅ include 'name'
 
     // Generate token
     const token = generateToken(user);
     res.status(201).json({ token, user });
   } catch (error) {
+    console.error("Register error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 
 const logout = (req, res) => {
